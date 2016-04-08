@@ -1,9 +1,8 @@
 import requests
 
 def get_page(url):
-    response = requests.get(url)
-    page = response.content
-    return page
+    page = requests.get(url)
+    return page.content
 
 # adding keyword into index
 def add_to_index(index, keyword, url):
