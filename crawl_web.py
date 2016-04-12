@@ -1,8 +1,8 @@
-import requests
+import urllib
 
 def get_page(url):
-    page = requests.get(url)
-    return page.content
+    page = urllib.urlopen(url).read()
+    return page
 
 # adding keyword into index
 def add_to_index(index, keyword, url):
