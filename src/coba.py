@@ -1,9 +1,11 @@
-import urllib
+import urllib, requests
 from bs4 import BeautifulSoup
 
 def get_page(url):
 	try:
-		return urllib.urlopen(url).read()
+		page = requests.get(url)
+		return page.content
+		#return urllib.urlopen(url).read()
 	except:
 		return ""
 
