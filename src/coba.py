@@ -60,7 +60,7 @@ def get_all_links(page):
 	while True:
 		url, endpos = get_next_target(page)
 		if url:
-			if url != "#":
+			if url != "#" and "http://" in url or "https://" in url:
 				links.append(url)
 			page = page[endpos:]
 		else:
