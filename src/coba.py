@@ -98,5 +98,6 @@ def crawl_web(seed): #crawl_web(seed, max_page) untuk membatasi jumlah page
 			content = get_page(page)
 			add_page_to_index(index, page, get_text_from_page(content))
 			union(tocrawl, get_all_links(content))
+			print "[CRAWLED] "+page+" | %s pages more." % str(len(tocrawl))
 			crawled.append(page)
 	return index
