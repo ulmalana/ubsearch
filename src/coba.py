@@ -1,11 +1,12 @@
+# Masalah: get page https bermasalah di SSL, usahakan semua https diganti ke http
+# Tambahkan http content type selain image
 import urllib, requests
 from bs4 import BeautifulSoup
 
 def get_page(url):
 	try:
 		page = requests.get(url)
-		return page.content
-		#return urllib.urlopen(url).read()
+		return page
 	except:
 		return ""
 
@@ -61,7 +62,8 @@ def get_all_links(page):
 		url, endpos = get_next_target(page)
 		if url:
 			if url != "#" and "http://" in url or "https://" in url:
-				links.append(url)
+				if "filkom.ub.ac.id" in url:
+					links.append(url)
 			page = page[endpos:]
 		else:
 			break
@@ -95,9 +97,11 @@ def crawl_web(seed): #crawl_web(seed, max_page) untuk membatasi jumlah page
 	while tocrawl:
 		page = tocrawl.pop()
 		if page not in crawled: #and len(crawled) < max_page
-			content = get_page(page)
-			add_page_to_index(index, page, get_text_from_page(content))
-			union(tocrawl, get_all_links(content))
-			print "[CRAWLED] "+page+" | %s pages more." % str(len(tocrawl))
+			web_content = get_page(page)
+			if "text/html" in web_content.headers["content-type"] or "text/plain" in web_content.headers["content-type"]:
+				print "CRAWLING "+page+"..."
+				add_page_to_index(index, page, get_text_from_page(web_content.content))
+				union(tocrawl, get_all_links(web_content.content))
+				print "[CRAWLED] "+page+" | %s pages more." % str(len(tocrawl))
 			crawled.append(page)
 	return index
