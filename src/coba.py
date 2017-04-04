@@ -8,7 +8,7 @@ def get_page(url):
 		page = requests.get(url)
 		return page
 	except:
-		return ""
+		return "Error"
 
 def get_text_from_page(html):
 	soup = BeautifulSoup(html, 'lxml')
@@ -98,12 +98,15 @@ def crawl_web(seed): #crawl_web(seed, max_page) untuk membatasi jumlah page
 		page = tocrawl.pop()
 		if page not in crawled: #and len(crawled) < max_page
 			web_content = get_page(page)
-			if "text/html" in web_content.headers["content-type"] or "text/plain" in web_content.headers["content-type"]:
-				print "CRAWLING "+page+"..."
-				add_page_to_index(index, page, get_text_from_page(web_content.content))
-				union(tocrawl, get_all_links(web_content.content))
-				print "[CRAWLED] "+page+" | %s pages more." % str(len(tocrawl))
-			else:
+			if web_content == "Error":
 				print "[SKIPPED] "+page+" | %s pages more." % str(len(tocrawl))
+			else:
+				if "text/html" in web_content.headers["content-type"] or "text/plain" in web_content.headers["content-type"]:
+					print "CRAWLING "+page+"..."
+					add_page_to_index(index, page, get_text_from_page(web_content.content))
+					union(tocrawl, get_all_links(web_content.content))
+					print "[CRAWLED] "+page+" | %s pages more." % str(len(tocrawl))
+				else:
+					print "[SKIPPED] "+page+" | %s pages more." % str(len(tocrawl))
 			crawled.append(page)
 	return index
